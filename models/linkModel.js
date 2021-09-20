@@ -5,6 +5,7 @@ let linkSchema = new Schema ({
     longUrl: String,
     shortUrl: String,
     urlNickname: { type: String, default: "" },
+    qrCode: { type:String, default: "" },
     linkOwner: {
         userId: String,
         email: String,
