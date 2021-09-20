@@ -11,7 +11,7 @@ module.exports.createLink = async (req, res) => {
         .then(result => {
             index = result.findIndex(link => link.shortUrl === randShortUrl);
         })
-        if (index !== -1) {
+        if (index !== -1 || Number(randShortUrl)) {
             hexUrl();
         } else {
             return randShortUrl;
@@ -165,6 +165,19 @@ module.exports.setUrlNickname = (req, res) => {
         } else if (foundLink) {
             foundLink.urlNickname = req.body.newNickname;
             foundLink.save(err => err ? console.log(err) : res.send({nicknameChanged : true}));
+        } else {
+            res.send({linkNotFound: true});
+        }
+    })
+}
+
+module.exports.setQrCode = (req, res) => {
+    Link.findOne({_id: req.body.linkId}, (err, foundLink) => {
+        if (err) {
+            res.send({error: err});
+        } else if (foundLink) {
+            foundLink.qrCode = req.body.qrCode;
+            foundLink.save(err => err ? console.log(err) : res.send({qrCodeSaved : true}));
         } else {
             res.send({linkNotFound: true});
         }
