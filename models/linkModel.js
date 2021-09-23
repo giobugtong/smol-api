@@ -7,10 +7,7 @@ let linkSchema = new Schema ({
     urlNickname: { type: String, default: "" },
     qrCode: { type:String, default: "" },
     linkOwner: {
-        userId: String,
-        email: String,
-        firstName: String,
-        lastName: String
+        userId: String
     },
     numberOfHits: [
         {

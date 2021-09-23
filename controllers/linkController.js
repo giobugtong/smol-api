@@ -32,8 +32,7 @@ module.exports.createLink = async (req, res) => {
                     longUrl: body.longUrl,
                     shortUrl: result,
                     linkOwner: {
-                        userId: decodedUser.id,
-                        email: decodedUser.email
+                        userId: decodedUser.id
                     }
                 });
                 user.links.push({shortUrl: newLink.shortUrl}); // Pushes the shortUrl to the user's links property for viewing and editing later
@@ -52,8 +51,7 @@ module.exports.createLink = async (req, res) => {
                     longUrl: body.longUrl,
                     shortUrl: body.shortUrl,
                     linkOwner: {
-                        userId: decodedUser.id,
-                        email: decodedUser.email
+                        userId: decodedUser.id
                     }
                 });
                 user.links.push({shortUrl: newLink.shortUrl, linkId: newLink._id}); // Pushes the shortUrl to the user's links property for viewing and editing later
