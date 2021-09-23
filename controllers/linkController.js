@@ -11,7 +11,7 @@ module.exports.createLink = async (req, res) => {
         .then(result => {
             index = result.findIndex(link => link.shortUrl === randShortUrl);
         })
-        if (index !== -1 || Number(randShortUrl)) {
+        if (index !== -1 || Number(randShortUrl) || Number(randShortUrl[0])) {
             hexUrl();
         } else {
             return randShortUrl;
@@ -33,9 +33,7 @@ module.exports.createLink = async (req, res) => {
                     shortUrl: result,
                     linkOwner: {
                         userId: decodedUser.id,
-                        email: decodedUser.email,
-                        firstName: decodedUser.firstName,
-                        lastName: decodedUser.lastName
+                        email: decodedUser.email
                     }
                 });
                 user.links.push({shortUrl: newLink.shortUrl}); // Pushes the shortUrl to the user's links property for viewing and editing later
@@ -55,9 +53,7 @@ module.exports.createLink = async (req, res) => {
                     shortUrl: body.shortUrl,
                     linkOwner: {
                         userId: decodedUser.id,
-                        email: decodedUser.email,
-                        firstName: decodedUser.firstName,
-                        lastName: decodedUser.lastName
+                        email: decodedUser.email
                     }
                 });
                 user.links.push({shortUrl: newLink.shortUrl, linkId: newLink._id}); // Pushes the shortUrl to the user's links property for viewing and editing later
@@ -78,7 +74,7 @@ module.exports.createLinkAsGuest = (req, res) => {
         .then(result => {
             index = result.findIndex(link => link.shortUrl === randShortUrl);
         })
-        if (index !== -1) {
+        if (index !== -1 ) {
             hexUrl();
         } else {
             return randShortUrl;
