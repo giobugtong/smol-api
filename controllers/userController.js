@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const { createAccessToken } = require("../auth");
+const Link = require("../models/linkModel");
 
 module.exports.register = (req, res) => {
     let { body } = req;
@@ -49,10 +50,22 @@ module.exports.profile = (req, res) => {
 }
 
 module.exports.saveStoredLinks = (req, res) => {
+    const assignLinkOwner = linkArray => {
+        linkArray.forEach(link => {
+            Link.findOne({_id: link.linkId })
+            .then(result => {
+                result.linkOwner.userId = req.body.userId;
+                result.save();
+            })
+            .catch(err => console.log(err))
+        })
+    }
+
     User.findOne({_id: req.body.userId}, (err, foundUser) => {
         if (err) {
             res.send({error: true});
         } else if (foundUser) {
+            assignLinkOwner(req.body.arrayOfLinks)
             foundUser.links = [...foundUser.links, ...req.body.arrayOfLinks];
             foundUser.save((err, savedUser) => err ? res.send({error: err}) : res.send(true));
         }
