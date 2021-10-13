@@ -11,8 +11,9 @@ module.exports.createLink = async (req, res) => {
         .then(result => {
             index = result.findIndex(link => link.shortUrl === randShortUrl);
         })
-        if (index !== -1 || Number(randShortUrl) || Number(randShortUrl[0])) {
-            hexUrl();
+        // Ensures randomly generated short url does not exist in database, is not all numbers, and does not begin with a number including 0
+        if (index !== -1 || Number(randShortUrl) || Number(randShortUrl[0]) || randShortUrl[0] === "0") {
+            return hexUrl();
         } else {
             return randShortUrl;
         }
@@ -72,8 +73,10 @@ module.exports.createLinkAsGuest = (req, res) => {
         .then(result => {
             index = result.findIndex(link => link.shortUrl === randShortUrl);
         })
-        if (index !== -1 ) {
-            hexUrl();
+
+            // Ensures randomly generated short url does not exist in database, is not all numbers, and does not begin with a number including 0
+        if (index !== -1 || Number(randShortUrl) || Number(randShortUrl[0]) || randShortUrl[0] === "0") {
+            return hexUrl();
         } else {
             return randShortUrl;
         }
@@ -122,16 +125,18 @@ module.exports.retrieveLink = (req, res) => {
 }
 
 module.exports.addToHits = (req, res) => {
-    Link.findOne({shortUrl: req.body.shortUrl}, (err, foundLink) => {
-        if (err) {
-            res.send({error: err});
-        } else if (foundLink) {
-            foundLink.numberOfHits.push(new Date())
-            foundLink.save((err, savedLink) => err ? res.send({error: err}) : res.send(savedLink));
+    Link.findOne({shortUrl: req.body.shortUrl})
+    .then(foundLink => {
+        if (foundLink) {
+            foundLink.numberOfHits.push(new Date());
+            foundLink.save()
+            .then(savedLink => res.send(savedLink))
+            .catch(error => res.send({error: error}))
         } else {
-            res.send({linkNotFound: true});
+            res.send({linkNotFound: true})
         }
     })
+    .catch(error => res.send({error: error}))
 }
 
 module.exports.toggleStatus = (req, res) => {
